@@ -1,7 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using web_text_forum.Application.Interfaces;
+using web_text_forum.Application.Services;
 using web_text_forum.Data;
+using web_text_forum.Infrastructure.Repositories;
 
 namespace web_text_forum
 {
@@ -23,6 +26,19 @@ namespace web_text_forum
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            
+            builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<IPostService, PostService>();
+
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
+
+            builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+            builder.Services.AddScoped<ILikeService, LikeService>();
+
 
 
             var app = builder.Build();

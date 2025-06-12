@@ -22,6 +22,11 @@ namespace web_text_forum.Data
             modelBuilder.Entity<Comment>().ToTable("Comments");
             modelBuilder.Entity<Like>().ToTable("Likes");
             modelBuilder.Entity<Tag>().ToTable("Tags");
+
+            // Ensures one like per user per post
+            modelBuilder.Entity<Like>()
+                .HasIndex(l => new { l.PostId, l.UserId })
+                .IsUnique();            
         }
     }
 }
