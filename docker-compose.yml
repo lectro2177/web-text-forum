@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  web-text-forum:
+    container_name: web-text-forum-c1
+    build:
+      context: .
+      dockerfile: web-text-forum\Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=webtextforum_db;User Id=sa;Password=enforcement_nonillions_cadagis_01;TrustServerCertificate=True;
+
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:latest
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=enforcement_nonillions_cadagis_01
+      - MSSQL_PID=Developer
+
+# # services:
+# #   web-text-forum:
+# #     image: ${DOCKER_REGISTRY-}webtextforum
+# #     build:
+# #       context: web-text-forum
+# #       dockerfile: Dockerfile
+
+# # #version: '3.4'
+
+# name: web-text-forum
+# services:
+#   web-text-forum:
+#     image: ${DOCKER_REGISTRY-}webtextforum
+#     build:
+#       context: web-text-forum
+#       dockerfile: Dockerfile
+  
+#   # web-text-forum:
+#   #   container_name: web-text-forum-api
+#   #   build:
+#   #     context: .
+#   #     dockerfile: web-text-forum/Dockerfile
+#   #   ports:
+#   #     - "8080:8080"
+#   #     - "8081:8081"
+#   #     #- "5000:8080"
+#   #   depends_on:
+#   #     - docker_sqlserver
+
+#   docker_sqlserver:
+#     container_name: docker_sqlserver
+#     build:
+#       context: .
+#       dockerfile: web-text-forum/db.Dockerfile
+#     ports:
+#       - "1433:1433"
