@@ -18,6 +18,8 @@ namespace web_text_forum.Application.Services
 
         public Task<User?> GetUserByUsernameAsync(string username) => _userRepository.GetByUsernameAsync(username);
 
+        public Task<bool> IsModeratorAsync(string username) => _userRepository.IsModeratorAsync(username);
+
         public Task<IEnumerable<User>> GetAllUsersAsync() => _userRepository.GetAllAsync();
 
         public Task AddUserAsync(User user) => _userRepository.AddAsync(user);

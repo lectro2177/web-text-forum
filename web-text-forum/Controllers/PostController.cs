@@ -12,10 +12,12 @@ namespace web_text_forum.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
+        private readonly IUserService _userService;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, IUserService userService)
         {
             _postService = postService;
+            _userService = userService;
         }
 
         [HttpGet("{id}")]
@@ -39,6 +41,32 @@ namespace web_text_forum.Controllers
         {
             await _postService.AddPostAsync(post);
             return CreatedAtAction(nameof(Get), new { id = post.Id }, post);
+        }
+
+        //[BasicAuthorize(Roles = "Moderator")]
+        [BasicAuthorize]
+        [HttpPost("{id}/tag/{tagId}")]
+        public async Task<ActionResult> TagPost(int id, int tagId)
+        {
+            var post = await _postService.GetPostByIdAsync(id);
+            if (post == null) return NotFound();
+
+            var user = HttpContext.User;
+
+            var userName = user.Identity.Name;
+            if (userName == null) return Unauthorized();
+
+            var dbUser = await _userService.GetUserByUsernameAsync(userName);
+            if (dbUser == null) return NotFound();
+
+            if (dbUser.Role == UserRole.Moderator)
+            {
+                post.TagId = tagId;
+                await _postService.UpdatePostAsync(post);
+                return NoContent();
+            }
+
+            return Forbid();
         }
     }
 }

@@ -42,6 +42,14 @@ namespace web_text_forum.Controllers
             return Ok(users);
         }
 
+        [HttpGet("{username}/is-moderator")]
+        public async Task<ActionResult<bool>> IsModerator(string username)
+        {
+            var isModerator = await _userService.IsModeratorAsync(username);
+            return Ok(isModerator);
+        }
+
+
         //[BasicAuthorize]
         //[HttpPost]
         //public async Task<ActionResult> Create(User user)

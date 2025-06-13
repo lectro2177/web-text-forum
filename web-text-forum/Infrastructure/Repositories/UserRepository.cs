@@ -22,6 +22,13 @@ namespace web_text_forum.Infrastructure.Repositories
         public async Task<User?> GetByUsernameAsync(string username) =>
             await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
+        public async Task<bool> IsModeratorAsync(string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            
+            return user != null && user.Role == UserRole.Moderator;
+        }
+
         public async Task<IEnumerable<User>> GetAllAsync() =>
             await _context.Users.ToListAsync();
 
