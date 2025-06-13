@@ -14,13 +14,23 @@ namespace web_text_forum.Infrastructure.Repositories
         public PostRepository(ForumContext context)
         {
             _context = context;
+        }        
+
+        public async Task<Post?> GetByIdAsync(int id)
+        {
+            var post = await _context.Posts
+                .Include(p => p.Comments)
+                .Include(p => p.Likes)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return post;
         }
 
-        public async Task<Post?> GetByIdAsync(int id) =>
-            await _context.Posts.FindAsync(id);
-
         public async Task<IEnumerable<Post>> GetAllAsync() =>
-            await _context.Posts.ToListAsync();
+            await _context.Posts
+                .Include(p => p.Comments)
+                .Include(p => p.Likes)
+                .ToListAsync();
 
         public async Task AddAsync(Post post)
         {

@@ -12,7 +12,7 @@ namespace web_text_forum.Data
             // Look for any users.
             if (context.Users.Any())
             {
-                return;   // DB has been seeded
+                return;   // DB has been seeded (yes this is just a basic check - TODO: perhaps improve later)
             }
 
             using var transaction = context.Database.BeginTransaction();

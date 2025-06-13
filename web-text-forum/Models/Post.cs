@@ -9,12 +9,10 @@ namespace web_text_forum.Models
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public int? TagId { get; set; }
-
-        // Navigation properties for EF Core
-        [ForeignKey("UserId")]
         public User? User { get; set; }
-
-        [ForeignKey("TagId")]
         public Tag? Tag { get; set; }
+
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<Like> Likes { get; set; } = new List<Like>();
     }
 }

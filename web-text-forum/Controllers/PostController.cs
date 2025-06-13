@@ -35,6 +35,23 @@ namespace web_text_forum.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("paged/{pageNumber:int}/{pageSize:int}")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetAllPaged(
+            int pageNumber = 1,
+            int pageSize = 10)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var posts = await _postService.GetAllPostsAsync();
+
+            var pagedPosts = posts
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+            return Ok(pagedPosts);
+        }
+
         [BasicAuthorize]
         [HttpPost]
         public async Task<ActionResult> Create(Post post)
@@ -42,8 +59,7 @@ namespace web_text_forum.Controllers
             await _postService.AddPostAsync(post);
             return CreatedAtAction(nameof(Get), new { id = post.Id }, post);
         }
-
-        //[BasicAuthorize(Roles = "Moderator")]
+        
         [BasicAuthorize]
         [HttpPost("{id}/tag/{tagId}")]
         public async Task<ActionResult> TagPost(int id, int tagId)
@@ -61,7 +77,7 @@ namespace web_text_forum.Controllers
 
             if (dbUser.Role == UserRole.Moderator)
             {
-                post.TagId = tagId;
+                post.TagId = tagId;                
                 await _postService.UpdatePostAsync(post);
                 return NoContent();
             }
