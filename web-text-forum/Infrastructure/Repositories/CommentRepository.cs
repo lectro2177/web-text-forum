@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using web_text_forum.Models;
 using web_text_forum.Application.Interfaces;
 using web_text_forum.Data;
+using web_text_forum.Attributes;
 
 namespace web_text_forum.Infrastructure.Repositories
 {

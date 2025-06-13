@@ -16,6 +16,8 @@ namespace web_text_forum.Application.Services
 
         public Task<User?> GetUserByIdAsync(int id) => _userRepository.GetByIdAsync(id);
 
+        public Task<User?> GetUserByUsernameAsync(string username) => _userRepository.GetByUsernameAsync(username);
+
         public Task<IEnumerable<User>> GetAllUsersAsync() => _userRepository.GetAllAsync();
 
         public Task AddUserAsync(User user) => _userRepository.AddAsync(user);

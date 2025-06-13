@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using web_text_forum.Security;
 
 namespace web_text_forum.Data
 {
@@ -21,11 +22,11 @@ namespace web_text_forum.Data
                 // Create one moderator and three regular users.
                 var users = new Models.User[]
                 {
-                    new Models.User { Username = "moderator1", Email = "moderator1@host.local", PasswordHash = "paswordhash1", Role = Models.UserRole.Moderator, CreatedAt = DateTime.Now },
+                    new Models.User { Username = "moderator1", Email = "moderator1@host.local", PasswordHash = PasswordHasher.GetBase64Hash_SHA256("SuperSecure1024!"), Role = Models.UserRole.Moderator, CreatedAt = DateTime.Now },
                     
-                    new Models.User { Username = "user1", Email = "user1@host.local", PasswordHash = "passwordhash2", Role = Models.UserRole.RegualarUser, CreatedAt = DateTime.Now },
-                    new Models.User { Username = "user2", Email = "user2@host.local", PasswordHash = "passwordhash3", Role = Models.UserRole.RegualarUser, CreatedAt = DateTime.Now },
-                    new Models.User { Username = "user3", Email = "user3@host.local", PasswordHash = "passwordhash4", Role = Models.UserRole.RegualarUser, CreatedAt = DateTime.Now }
+                    new Models.User { Username = "user1", Email = "user1@host.local", PasswordHash = PasswordHasher.GetBase64Hash_SHA256("MyPetsName2025"), Role = Models.UserRole.RegualarUser, CreatedAt = DateTime.Now },
+                    new Models.User { Username = "user2", Email = "user2@host.local", PasswordHash = PasswordHasher.GetBase64Hash_SHA256("MyBirthday1980"), Role = Models.UserRole.RegualarUser, CreatedAt = DateTime.Now },
+                    new Models.User { Username = "user3", Email = "user3@host.local", PasswordHash = PasswordHasher.GetBase64Hash_SHA256("TooShort1234"), Role = Models.UserRole.RegualarUser, CreatedAt = DateTime.Now }
                 };
 
                 foreach (var user in users)

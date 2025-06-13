@@ -10,6 +10,7 @@
     <DockerServiceName>web-text-forum</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="BasicAuthenticationHandler.cs" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

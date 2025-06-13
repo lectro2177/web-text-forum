@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using web_text_forum.Models;
 using web_text_forum.Application.Interfaces;
+using web_text_forum.Attributes;
 
 namespace web_text_forum.Controllers
 {
@@ -46,7 +47,8 @@ namespace web_text_forum.Controllers
             if (like == null) return NotFound();
             return Ok(like);
         }
-
+        
+        [BasicAuthorize]
         [HttpPost]
         public async Task<ActionResult> Create(Like like)
         {
@@ -54,11 +56,12 @@ namespace web_text_forum.Controllers
             return CreatedAtAction(nameof(Get), new { id = like.Id }, like);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await _likeService.DeleteLikeAsync(id);
-            return NoContent();
-        }
+        //[BasicAuthorize]
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult> Delete(int id)
+        //{
+        //    await _likeService.DeleteLikeAsync(id);
+        //    return NoContent();
+        //}
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using web_text_forum.Models;
 using web_text_forum.Application.Interfaces;
+using web_text_forum.Attributes;
 
 namespace web_text_forum.Controllers
 {
@@ -40,6 +41,7 @@ namespace web_text_forum.Controllers
             return Ok(tag);
         }
 
+        [BasicAuthorize]
         [HttpPost]
         public async Task<ActionResult> Create(Tag tag)
         {
@@ -47,19 +49,21 @@ namespace web_text_forum.Controllers
             return CreatedAtAction(nameof(Get), new { id = tag.Id }, tag);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, Tag tag)
-        {
-            if (id != tag.Id) return BadRequest();
-            await _tagService.UpdateTagAsync(tag);
-            return NoContent();
-        }
+        //[BasicAuthorize]
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> Update(int id, Tag tag)
+        //{
+        //    if (id != tag.Id) return BadRequest();
+        //    await _tagService.UpdateTagAsync(tag);
+        //    return NoContent();
+        //}
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await _tagService.DeleteTagAsync(id);
-            return NoContent();
-        }
+        //[BasicAuthorize]
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult> Delete(int id)
+        //{
+        //    await _tagService.DeleteTagAsync(id);
+        //    return NoContent();
+        //}
     }
 }

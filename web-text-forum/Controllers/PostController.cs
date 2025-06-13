@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using web_text_forum.Models;
 using web_text_forum.Application.Interfaces;
+using web_text_forum.Attributes;
+using web_text_forum.Models;
 
 namespace web_text_forum.Controllers
 {
@@ -32,6 +33,7 @@ namespace web_text_forum.Controllers
             return Ok(posts);
         }
 
+        [BasicAuthorize]
         [HttpPost]
         public async Task<ActionResult> Create(Post post)
         {

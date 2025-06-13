@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using web_text_forum.Models;
 using web_text_forum.Application.Interfaces;
+using web_text_forum.Attributes;
+using web_text_forum.Models;
 
 namespace web_text_forum.Controllers
 {
@@ -32,6 +33,7 @@ namespace web_text_forum.Controllers
             return Ok(comments);
         }
 
+        
         [HttpGet("post/{postId}")]
         public async Task<ActionResult<IEnumerable<Comment>>> GetByPostId(int postId)
         {
@@ -39,6 +41,7 @@ namespace web_text_forum.Controllers
             return Ok(comments);
         }
 
+        [BasicAuthorize]
         [HttpPost]
         public async Task<ActionResult> Create(Comment comment)
         {
@@ -46,6 +49,7 @@ namespace web_text_forum.Controllers
             return CreatedAtAction(nameof(Get), new { id = comment.Id }, comment);
         }
 
+        [BasicAuthorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, Comment comment)
         {
@@ -54,11 +58,12 @@ namespace web_text_forum.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await _commentService.DeleteCommentAsync(id);
-            return NoContent();
-        }
+        //[BasicAuthorize]
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult> Delete(int id)
+        //{
+        //    await _commentService.DeleteCommentAsync(id);
+        //    return NoContent();
+        //}
     }
 }

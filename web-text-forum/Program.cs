@@ -1,6 +1,8 @@
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using web_text_forum.Application.Interfaces;
 using web_text_forum.Application.Services;
 using web_text_forum.Data;
@@ -19,8 +21,39 @@ namespace web_text_forum
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
+
+            #region Configure Swagger
+            //builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BasicAuth", Version = "v1" });
+                c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "basic",
+                    In = ParameterLocation.Header,
+                    Description = "Basic Authorization header using the Bearer scheme."
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "basic"
+                                }
+                            },
+                            new string[] {}
+                    }
+                });
+            });
+            #endregion
+            
             // Add DbContext 
             builder.Services.AddDbContext<ForumContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -39,8 +72,17 @@ namespace web_text_forum
             builder.Services.AddScoped<ILikeRepository, LikeRepository>();
             builder.Services.AddScoped<ILikeService, LikeService>();
 
+            // Add authentication and authorization services
+            builder.Services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, Security.BasicAuthenticationHandler>("BasicAuthentication", null);
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("BasicAuthentication", policy =>
+                    policy.RequireAuthenticatedUser());
+            });
 
+            
             var app = builder.Build();
 
 
@@ -63,10 +105,17 @@ namespace web_text_forum
             }
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            bool alwaysUseSwagger = true;
+
+            if (alwaysUseSwagger || app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+            }
+
+            if (app.Environment.IsDevelopment())
+            { 
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
