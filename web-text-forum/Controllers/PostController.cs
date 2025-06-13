@@ -84,5 +84,46 @@ namespace web_text_forum.Controllers
 
             return Forbid();
         }
+
+        [HttpGet("filterandsort")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetFiltered(            
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] int? userid = null,
+            [FromQuery] int? tagId = null,
+            [FromQuery] string? sortBy = null, // "date" or "likes"
+            [FromQuery] bool descending = false)
+        {
+            // TODO: improve this by having specific methods in the service for filtering and sorting
+            var posts = await _postService.GetAllPostsAsync();            
+
+            // Filter by date range
+            if (startDate.HasValue)
+                posts = posts.Where(p => p.CreatedAt >= startDate.Value);
+            if (endDate.HasValue)
+                posts = posts.Where(p => p.CreatedAt <= endDate.Value);
+
+            // Filter by author username
+            if (userid.HasValue)
+                posts = posts.Where(p => p.UserId == userid);
+
+            // Filter by tag
+            if (tagId.HasValue)
+                posts = posts.Where(p => p.TagId == tagId.Value);
+
+            // Sorting
+            posts = sortBy switch
+            {
+                "date" => descending
+                    ? posts.OrderByDescending(p => p.CreatedAt)
+                    : posts.OrderBy(p => p.CreatedAt),
+                "likes" => descending
+                    ? posts.OrderByDescending(p => p.Likes != null ? p.Likes.Count : 0)
+                    : posts.OrderBy(p => p.Likes != null ? p.Likes.Count : 0),
+                _ => posts
+            };
+
+            return Ok(posts);
+        }
     }
 }

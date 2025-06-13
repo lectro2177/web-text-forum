@@ -58,7 +58,7 @@ namespace web_text_forum.Data
                     {
                         Content = $"This is the content of a post by {user.Username}.",
                         UserId = user.Id,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.Now.AddDays(userNumber)
                     };
 
                     // Only the last user will have a post tagged as 'misleading or false information'.
@@ -76,8 +76,12 @@ namespace web_text_forum.Data
 
                 foreach (var post in posts)
                 {
+                    userNumber = 0;
+
                     foreach (var user in users)
                     {
+                        userNumber++;
+
                         if (user.Id == post.UserId) continue; // Skip the post author
 
                         var comment = new Models.Comment
@@ -85,7 +89,7 @@ namespace web_text_forum.Data
                             PostId = post.Id,
                             UserId = user.Id,
                             Content = $"This is comment by {user.Username} on post {post.Id}.",
-                            CreatedAt = DateTime.Now
+                            CreatedAt = DateTime.Now.AddDays(userNumber)
                         };
 
                         comments.Add(comment);
@@ -100,15 +104,19 @@ namespace web_text_forum.Data
 
                 foreach (var post in posts)
                 {
+                    userNumber = 0;
+
                     foreach (var user in users)
                     {
+                        userNumber++;
+
                         if (user.Id == post.UserId) continue; // Skip the post author
 
                         var like = new Models.Like
                         {
                             PostId = post.Id,
                             UserId = user.Id,
-                            CreatedAt = DateTime.Now
+                            CreatedAt = DateTime.Now.AddDays(userNumber)
                         };
 
                         likes.Add(like);
